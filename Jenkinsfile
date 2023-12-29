@@ -10,19 +10,15 @@ pipeline {
             }
         }
         stage('hello') {
+            when {
+                branch 'dev*' || branch 'feauture*'
+            }
             steps {
                 echo 'Hello World!!!'
             }
         }
         stage('cat') {
-            when {
-                branch 'dev*'
-            }
-            steps {
-                sh '''
-                cat README.md
-                '''
-            }
+           
         }
     }
 }
