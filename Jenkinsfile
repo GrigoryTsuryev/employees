@@ -11,10 +11,7 @@ pipeline {
         }
         stage('hello') {
             when {
-                branch 'dev*' || branch 'feat*'
-            }
-            steps {
-                echo 'Hello World!!!'
+                expression { return (env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /feat.*/) }
             }
         }
     }
