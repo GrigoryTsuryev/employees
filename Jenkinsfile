@@ -13,6 +13,12 @@ pipeline {
             when {
                 expression { return (env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /feat.*/) }
             }
+            steps {
+                    script {
+                        def branchName = env.BRANCH_NAME
+                       
+                    }
+            }
         }
     }
 }
