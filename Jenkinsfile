@@ -17,8 +17,5 @@ pipeline {
                 echo 'Hello World!!!'
             }
         }
-        stage('cat') {
-           
-        }
     }
 }
