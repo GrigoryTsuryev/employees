@@ -9,15 +9,18 @@ pipeline {
                     }
             }
         }
-        stage('hello') {
-            when {
-                expression { return (env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /feat.*/) }
-            }
+        stage('Build Docker Image') {
             steps {
-                    script {
-                        def branchName = env.BRANCH_NAME
-                       
+                script {
+                    // Build the Docker image
+                    def dockerImage = docker.build('employees-app', '-f Dockerfile .')
+
+                    // Run unit tests within the Docker image
+                    dockerImage.inside {
+                        sh 'pip install -r requirements.txt'
+                        sh 'python -m unittest discover -s tests'
                     }
+                }
             }
         }
     }
