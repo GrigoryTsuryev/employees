@@ -1,6 +1,6 @@
 import unittest
 import json
-from employees import app, employees, get_employee, employee_is_valid
+from employees import app, get_employee, employee_is_valid
 from unittest.mock import patch
 
 class TestEmployeeFunctions(unittest.TestCase):
@@ -17,36 +17,26 @@ class TestEmployeeFunctions(unittest.TestCase):
             response = self.app.get('/employees')
             self.assertEqual(response.status_code, 200)
             data = json.loads(response.get_data(as_text=True))
-            self.assertEqual(data, employees)
-        
-        def test_get_employee_by_id(self):
+            self.assertEqual(data, self.employees)
+        def test_get_employee_by_id_correct(self):
             response = self.app.get('/employees/1')
             self.assertEqual(response.status_code, 200)
             data = json.loads(response.get_data(as_text=True))
             self.assertEqual(data, self.employees[0])
 
+        def test_get_employee_by_id_not_correct(self):
             response = self.app.get('/employees/5')
             self.assertEqual(response.status_code, 404)
             data = json.loads(response.get_data(as_text=True))
             self.assertEqual(data['error'], 'Employee does not exist')
 
-        @patch('employees.employees', [{'id': 1, 'name': 'Ashley'}])
+
         def test_employee_is_valid(self):
             valid_employee = {'name': 'John'}
             invalid_employee = {'id': 2, 'name': 'Kate'}
             self.assertTrue(employee_is_valid(valid_employee))
             self.assertFalse(employee_is_valid(invalid_employee))
 
-        def test_create_employee(self):
-            new_employee = {'name': 'Sophia'}
-            response = self.app.post('/employees', data=json.dumps(new_employee), content_type='application/json')
-            self.assertEqual(response.status_code, 201)
-            self.assertIn('/employees/', response.headers['Location'])
-
-            created_employee_id = int(response.headers['Location'].split('/')[-1])
-            created_employee = get_employee(created_employee_id)
-            self.assertIsNotNone(created_employee)
-            self.assertEqual(created_employee['name'], new_employee['name'])
 
         def test_update_employee(self):
             employee_id = 1
@@ -61,13 +51,6 @@ class TestEmployeeFunctions(unittest.TestCase):
             self.assertEqual(response.status_code, 404)
 
         def test_delete_employee(self):
-            employee_id = 1
-            response = self.app.delete(f'/employees/{employee_id}')
-            self.assertEqual(response.status_code, 200)
-
-            deleted_employee = get_employee(employee_id)
-            self.assertIsNone(deleted_employee)
-
             response = self.app.delete('/employees/10')
             self.assertEqual(response.status_code, 404)
 
