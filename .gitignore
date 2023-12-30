@@ -1,2 +1,4 @@
 logback.log
 myenv/
+__pycache__/
+test/__pycache__/
