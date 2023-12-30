@@ -1,34 +1,34 @@
 import unittest
-import json
-from your_flask_app import app
+from app import get_employee, employee_is_valid
 
 class TestEmployeeFunctions(unittest.TestCase):
-    def setUp(self):
-        app.testing = True
-        self.app = app.test_client()
 
-        # Initialize some test data
-        self.test_employees = [
+    def setUp(self):
+        self.employees = [
             {'id': 1, 'name': 'Ashley'},
             {'id': 2, 'name': 'Kate'},
             {'id': 3, 'name': 'Joe'}
         ]
-        self.next_id = 4
 
-    def test_get_employee_by_id(self):
-        employee_id = 2
-        # Test the function that gets an employee by ID from the data
-        employee = self.get_employee(employee_id)
+    def test_get_employee_by_id_existing(self):
+        employee = get_employee(1, self.employees)
         self.assertIsNotNone(employee)
-        self.assertEqual(employee['id'], employee_id)
+        self.assertEqual(employee['id'], 1)
 
-    def test_get_employee_not_found(self):
-        # Test for a case where the employee is not found
-        employee_id = 10
-        employee = self.get_employee(employee_id)
+    def test_get_employee_by_id_non_existing(self):
+        employee = get_employee(4, self.employees)
         self.assertIsNone(employee)
 
-    def get_employee(self, employee_id):
-        # Simulate the function to get an employee from the data
-        return next((e for e in self.test_employees if e['id'] == employee_id), None)
+    def test_employee_is_valid_valid_employee(self):
+        valid_employee = {'name': 'John'}
+        self.assertTrue(employee_is_valid(valid_employee))
 
+    def test_employee_is_valid_invalid_employee(self):
+        invalid_employee = {'name': 'Alex', 'age': 25}
+        self.assertFalse(employee_is_valid(invalid_employee))
+
+    def test_employee_is_valid_empty_employee(self):
+        empty_employee = {}
+        self.assertFalse(employee_is_valid(empty_employee))
+
+    
