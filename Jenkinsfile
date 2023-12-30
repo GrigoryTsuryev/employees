@@ -31,7 +31,7 @@ pipeline {
     post {
         always {
             script {
-                docker.image(dockerImage.id).remove(force: true)
+                docker.image(dockerImage.id)
             }
         }
     }
