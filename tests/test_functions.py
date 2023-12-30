@@ -3,7 +3,7 @@ from employees import get_employee, employee_is_valid, create_employee, update_e
 
 class TestEmployeeFunctions(unittest.TestCase):
 
-    def setUp(self)
+    def setUp(self):
         self.employees = [
             {'id': 1, 'name': 'Ashley'},
             {'id': 2, 'name': 'Kate'},
