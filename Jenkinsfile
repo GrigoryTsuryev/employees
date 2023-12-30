@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-    def dockerImage;
+    def dockerImage = ''
 
     stages {
         stage('checkout') {
@@ -23,7 +23,7 @@ pipeline {
             }
         }
     }
-        post {
+    post {
         always {
             // Clean up - remove the Docker image after testing
             script {
