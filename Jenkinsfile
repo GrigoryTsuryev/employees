@@ -14,7 +14,7 @@ pipeline {
                 script {
                     def dockerImage = docker.build('employees-app', '-f Dockerfile .')
                     dockerImage.inside {
-                        sh 'sudo pip install -r requirements.txt'
+                        sh 'python -m unittest discover -s tests'
                     }
                 }
             }
