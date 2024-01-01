@@ -18,7 +18,7 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
+        stage('Run unittest') {
             steps {
                 script {
                     dockerImage.inside {

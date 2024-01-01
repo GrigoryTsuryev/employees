@@ -18,6 +18,7 @@ class TestEmployeeFunctions(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             data = json.loads(response.get_data(as_text=True))
             self.assertEqual(data, self.employees)
+            
         def test_get_employee_by_id_correct(self):
             response = self.app.get('/employees/1')
             self.assertEqual(response.status_code, 200)
