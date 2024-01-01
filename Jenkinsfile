@@ -14,7 +14,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('employees-app', '-f Dockerfile .')
+                    dockerImage = docker.build('employees-app')
                 }
             }
         }
