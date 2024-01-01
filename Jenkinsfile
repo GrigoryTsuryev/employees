@@ -30,7 +30,7 @@ pipeline {
         stage('Run Api Tests') {
             steps {
                 script {
-                    docker.image('employees-app').inside {
+                    dockerImage.inside {
                         sh 'python -m pytest /app/tests/api_tests.py'
                     }
                 }
