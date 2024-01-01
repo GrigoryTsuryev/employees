@@ -47,14 +47,9 @@ pipeline {
     post {
         always {
             script {
-                    docker.withServer('tcp://docker-server:2376') {
-                        docker.image('docker:latest').inside('-v /var/run/docker.sock:/var/run/docker.sock') {
-                             sh 'sudo docker stop $(docker ps -aq)'
-                             sh 'sudo docker rm $(docker ps -aq)'
-                             sh 'sudo docker rmi -f $(docker images -aq)'
-                        }
-                    }
-                
+                 sh 'docker stop $(docker ps -aq)'
+                 sh 'docker rm $(docker ps -aq)'
+                 sh 'docker rmi -f $(docker images -aq)'
             }
         }
     }
