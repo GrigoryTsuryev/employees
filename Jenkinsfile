@@ -14,7 +14,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('employees-app')
+                    dockerImage = docker.build('employees-app:latest')
                 }
             }
         }
@@ -46,7 +46,7 @@ pipeline {
                 script {
                     // Login to Docker Hub (replace credentials with yours)
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') { 
-                        app.push("latest") 
+                        dockerImage.push("latest") 
                     }
                 }
             }
