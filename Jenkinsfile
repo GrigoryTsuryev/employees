@@ -30,8 +30,9 @@ pipeline {
         stage('Run Api Tests') {
             steps {
                 script {
-                    dockerImage.inside {
-                        sh 'python -m unittest discover -s tests'
+                    docker.image('employees-app').inside {
+                        sh 'pytest tests/api_tests.py'
+                        // You might need to adjust the command depending on your setup
                     }
                 }
             }
