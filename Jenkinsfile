@@ -27,6 +27,15 @@ pipeline {
                 }
             }
         }
+        stage('Run Api Tests') {
+            steps {
+                script {
+                    dockerImage.inside {
+                        sh 'python -m unittest discover -s tests'
+                    }
+                }
+            }
+        }
     }
     post {
         always {

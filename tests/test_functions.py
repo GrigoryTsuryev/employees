@@ -18,7 +18,7 @@ class TestEmployeeFunctions(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             data = json.loads(response.get_data(as_text=True))
             self.assertEqual(data, self.employees)
-            
+
         def test_get_employee_by_id_correct(self):
             response = self.app.get('/employees/1')
             self.assertEqual(response.status_code, 200)
@@ -31,13 +31,11 @@ class TestEmployeeFunctions(unittest.TestCase):
             data = json.loads(response.get_data(as_text=True))
             self.assertEqual(data['error'], 'Employee does not exist')
 
-
         def test_employee_is_valid(self):
             valid_employee = {'name': 'John'}
             invalid_employee = {'id': 2, 'name': 'Kate'}
             self.assertTrue(employee_is_valid(valid_employee))
             self.assertFalse(employee_is_valid(invalid_employee))
-
 
         def test_update_employee(self):
             employee_id = 1
