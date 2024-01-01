@@ -59,18 +59,6 @@ pipeline {
                 }
             }
         }
-
-      
-    }
-      post {
-            always {
-                // Clean up: remove the Docker image built during the pipeline run
-                cleanWs()
-                script {
-                    dockerImage.remove()
-                }
-        }
-
     }
 
 }
