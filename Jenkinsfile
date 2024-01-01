@@ -60,7 +60,9 @@ pipeline {
             }
         }
 
-        post {
+      
+    }
+      post {
             always {
                 // Clean up: remove the Docker image built during the pipeline run
                 cleanWs()
@@ -68,7 +70,6 @@ pipeline {
                     dockerImage.remove()
                 }
         }
-    }
 
     }
 
