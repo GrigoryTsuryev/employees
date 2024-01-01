@@ -45,9 +45,10 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub (replace credentials with yours)
-                    withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
-                         dockerImage.push()
-                    }
+
+docker.withRegistry( '', "dockerhub" ) {
+dockerImage.push()
+
                 }
             }
         }
