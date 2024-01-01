@@ -27,12 +27,18 @@ pipeline {
                 }
             }
         }
+        stage('Run Employees App') {
+            steps {
+                script {
+                    docker.image('employees-app').withRun('-p 5000:5000') { }
+                }
+            }
+        }
         stage('Run Api Tests') {
             steps {
                 script {
                     docker.image('employees-app').inside {
                         sh 'pytest tests/api_tests.py'
-                        // You might need to adjust the command depending on your setup
                     }
                 }
             }
