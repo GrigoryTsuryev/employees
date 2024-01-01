@@ -45,11 +45,9 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub (replace credentials with yours)
-
-                    docker.withRegistry( '', "dockerhub" ) {
-                    dockerImage.push()
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') { 
+                        app.push("latest") 
                     }
-
                 }
             }
         }
