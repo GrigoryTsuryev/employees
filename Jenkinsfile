@@ -41,7 +41,9 @@ pipeline {
     post {
         always {
             script {
-                docker.image(dockerImage.id)
+                 sh 'docker stop $(docker ps -aq)'
+                 sh 'docker rm $(docker ps -aq)'
+                 sh 'docker rmi -f $(docker images -aq)'
             }
         }
     }
