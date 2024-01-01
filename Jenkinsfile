@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     docker.image('employees-app').inside {
-                        sh 'pytest tests/api_tests.py'
+                        sh 'python -m pytest /app/tests/api_tests.py'
                     }
                 }
             }
