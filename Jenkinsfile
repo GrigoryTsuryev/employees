@@ -34,7 +34,7 @@ pipeline {
                     // dockerImage.inside {
                     //     sh 'python -m pytest /app/tests/api_tests.py'
                     // }
-                      dockerImage.inside {
+                    dockerImage.inside {
                         sh 'python -m unittest discover -s tests'
                     }
                 }
@@ -45,8 +45,8 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub (replace credentials with yours)
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                        dockerImage.push()
+                    withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
+                         dockerImage.push()
                     }
                 }
             }
