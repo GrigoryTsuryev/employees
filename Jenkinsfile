@@ -27,13 +27,6 @@ pipeline {
                 }
             }
         }
-        stage('Run Employees App') {
-            steps {
-                script {
-                    docker.image('employees-app').withRun('-p 5000:5000') { }
-                }
-            }
-        }
         stage('Run Api Tests') {
             steps {
                 script {
@@ -44,13 +37,5 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            script {
-                 sh 'docker stop $(docker ps -aq)'
-                 sh 'docker rm $(docker ps -aq)'
-                 sh 'docker rmi -f $(docker images -aq)'
-            }
-        }
-    }
+
 }
