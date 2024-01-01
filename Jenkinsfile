@@ -1,20 +1,41 @@
+ def dockerImage;
 pipeline {
     agent any
+
     stages {
-        stage('hello') {
+        stage('checkout') {
             steps {
-                echo 'Hello World!!!'
+                script {
+                    def branchName = env.BRANCH_NAME
+                    git branch: branchName, url: 'https://github.com/GrigoryTsuryev/employees.git'
+                }
             }
         }
-        stage('cat') {
-            when {
-                branch 'dev*'
-            }
+        stage('Build Docker Image') {
             steps {
-                sh '''
-                cat README.md
-                '''
+                script {
+                    dockerImage = docker.build('employees-app')
+                }
+            }
+        }
+        stage('Run unittest') {
+            steps {
+                script {
+                    dockerImage.inside {
+                        sh 'python -m unittest discover -s tests'
+                    }
+                }
+            }
+        }
+        stage('Run Api Tests') {
+            steps {
+                script {
+                    dockerImage.inside {
+                        sh 'python -m pytest /app/tests/api_tests.py'
+                    }
+                }
             }
         }
     }
+
 }
