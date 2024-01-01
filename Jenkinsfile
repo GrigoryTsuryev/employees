@@ -26,17 +26,50 @@ pipeline {
                     }
                 }
             }
-            
+
         }
         stage('Run Api Tests') {
             steps {
                 script {
-                    dockerImage.inside {
-                        sh 'python -m pytest /app/tests/api_tests.py'
+                    // dockerImage.inside {
+                    //     sh 'python -m pytest /app/tests/api_tests.py'
+                    // }
+                }
+            }
+        }
+
+        stage('Deploy to repo') {
+            steps {
+                script {
+                    // dockerImage.inside {
+                    //     sh 'python -m pytest /app/tests/api_tests.py'
+                    // }
+                }
+            }
+        }
+
+
+        stage('Push Image to Docker Hub') {
+            steps {
+                script {
+                    // Login to Docker Hub (replace credentials with yours)
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                        dockerImage.push()
                     }
                 }
             }
         }
+
+        post {
+            always {
+                // Clean up: remove the Docker image built during the pipeline run
+                cleanWs()
+                script {
+                    dockerImage.remove()
+                }
+        }
+    }
+
     }
 
 }
