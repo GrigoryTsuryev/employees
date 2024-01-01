@@ -2,10 +2,20 @@ import requests
 import pytest
 import unittest
 import json
+import os
+
+DOCKER_ENV = os.getenv('DOCKER_ENV')
+
+# Define the base URL based on the environment
+def get_base_url():
+    if DOCKER_ENV:
+        return 'http://flask_app:5000'  # Replace with your service name
+    else:
+        return 'http://127.0.0.1:5000'  # Update with your local Flask app URL
 
 @pytest.fixture
 def base_url():
-    return 'http://127.0.0.1:5000'  # Update with your Flask app URL
+    return get_base_url()
 
 # Test using unittest.TestCase
 class TestAPI(unittest.TestCase):
