@@ -32,6 +32,11 @@ pipeline {
         
         
         stage('Run Api Tests') {
+             when {
+                expression {
+                    return env.BRANCH_NAME != 'master'
+                }
+            }
             steps {
                 script {
                     def dockerContainer;
@@ -47,6 +52,11 @@ pipeline {
         }
         
         stage('Push Image to Docker Hub') {
+             when {
+                expression {
+                    return env.BRANCH_NAME  = 'master'
+                }
+            }
             steps {
                 script {
                     // Login to Docker Hub (replace credentials with yours)
