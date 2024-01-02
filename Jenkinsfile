@@ -33,8 +33,7 @@ pipeline {
             steps {
                 script {
                     dockerImage.withRun('-p 5000:5000') { c ->
-                        // Run commands inside the container
-                        sh "python3 -m pytest /app/tests/api_tests.py"
+                        sh "python -m pytest /app/tests/api_tests.py"
                     }
                 }
             }
