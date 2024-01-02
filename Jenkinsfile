@@ -14,7 +14,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('tzvitsuryev/employees-app:10')
+                    dockerImage = docker.build('tzvitsuryev/employees-app:11')
                 }
             }
 
@@ -34,10 +34,7 @@ pipeline {
         stage('Run Api Tests') {
             steps {
                 script {
-                    dockerImage.run('-p 5000:5000 -d')
-                    dockerImage.inside {
-                        sh 'python3 -m pytest /app/tests/api_tests.py'
-                    }
+                    dockerImage.run('-p 5000:5000 -d').inside { sh 'python3 -m pytest /app/tests/api_tests.py' }
                 }
             }
         }
