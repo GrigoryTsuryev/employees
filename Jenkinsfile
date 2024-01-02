@@ -1,6 +1,10 @@
- def dockerImage;
+def dockerImage;
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.8'
+        }
+    }
 
     stages {
         stage('checkout') {
