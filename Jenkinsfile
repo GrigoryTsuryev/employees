@@ -33,11 +33,11 @@ pipeline {
             steps {
                 script {
                     def dockerContainer = dockerImage.run('-p 5000:5000 -d')
-                    def containerID = dockerContainer.id
-                    docker.inside("-u root ${containerID}") {
+                    dockerContainer.inside("-u root") {
                         sh 'python3 -m pytest /app/tests/api_tests.py'
                     }
                     dockerContainer.stop()
+                    dockerContainer.remove(force: true)
                 }
             }
         }
