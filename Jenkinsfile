@@ -40,7 +40,7 @@ pipeline {
                         sh "docker exec ${dockerContainer.id} python3 -m pytest /app/tests/api_tests.py"
                     } finally  {
                         dockerContainer.stop()
-                        dockerContainer.dump()
+                        sh "docker rm ${dockerContainer.id}"
                     }
 
                 }
