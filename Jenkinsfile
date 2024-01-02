@@ -1,4 +1,4 @@
- def dockerImage;
+def dockerImage;
 pipeline {
     agent any
 
@@ -7,17 +7,19 @@ pipeline {
             steps {
                 script {
                     def branchName = env.BRANCH_NAME
-                    git branch: branchName, url: 'https://github.com/GrigoryTsuryev/employees.git'
+                    git branch: branchName, credentialsId: 'github', url: 'https://github.com/GrigoryTsuryev/employees.git'
                 }
             }
         }
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('employees-app')
+                    dockerImage = docker.build('tzvitsuryev/employees-app:edge')
                 }
             }
+
         }
+
         stage('Run unittest') {
             steps {
                 script {
@@ -27,15 +29,44 @@ pipeline {
                 }
             }
         }
+        
+        
         stage('Run Api Tests') {
+             when {
+                expression {
+                    return env.BRANCH_NAME != 'master'
+                }
+            }
             steps {
                 script {
-                    dockerImage.inside {
-                        sh 'python -m pytest /app/tests/api_tests.py'
+                    def dockerContainer;
+                    try {
+                        dockerContainer = dockerImage.run()
+                        sh "docker exec ${dockerContainer.id} python3 -m pytest /app/tests/api_tests.py"
+                    } finally  {
+                        dockerContainer.stop()
+                    }
+
+                }
+            }
+        }
+        
+        stage('Push Image to Docker Hub') {
+             when {
+                expression {
+                    return env.BRANCH_NAME  = 'master'
+                }
+            }
+            steps {
+                script {
+                    // Login to Docker Hub (replace credentials with yours)
+                    withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
+                        dockerImage.push()
                     }
                 }
             }
         }
+
     }
 
 }
