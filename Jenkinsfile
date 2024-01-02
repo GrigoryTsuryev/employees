@@ -36,30 +36,9 @@ pipeline {
                 script {
             
                     def dockerContainer = dockerImage.run()
-
-                    def ready = false
-                    def maxAttempts = 30 // Change the number of attempts as needed
-                    def currentAttempt = 0
-                    while (!ready && currentAttempt < maxAttempts) {
-                        def containerStatus = sh(script: "docker inspect -f '{{.State.Running}}' ${dockerContainer.id}", returnStdout: true).trim()
-                        if (containerStatus == "true") {
-                            ready = true
-                        } else {
-                            currentAttempt++
-                            sleep(time: 10, unit: 'SECONDS') // Wait for 10 seconds before rechecking
-                        }
-                    }
-
-                    // Run tests inside the container
-                    if (ready) {
-                        sh "docker exec ${dockerContainer.id} python3 -m pytest /app/tests/api_tests.py"
-                    } else {
-                        error "Container didn't start in time"
-                    }
-
-                    // Clean up: stop and remove the container
+                    sh "docker exec ${dockerContainer.id} python3 -m pytest /app/tests/api_tests.py"
                     dockerContainer.stop()
-                    dockerContainer.remove(force: true)
+                    dockerContainer.remove()
                 }
             }
         }
