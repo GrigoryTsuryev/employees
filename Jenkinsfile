@@ -14,7 +14,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('tzvitsuryev/employees-app:1')
+                    dockerImage = docker.build('tzvitsuryev/employees-app:edge')
                 }
             }
 
@@ -34,8 +34,9 @@ pipeline {
         stage('Run Api Tests') {
             steps {
                 script {
+                    def dockerContainer;
                     try {
-                        def dockerContainer = dockerImage.run()
+                        dockerContainer = dockerImage.run()
                         sh "docker exec ${dockerContainer.id} python3 -m pytest /app/tests/api_tests.py"
                     } finally  {
                         dockerContainer.stop()
