@@ -27,13 +27,12 @@ pipeline {
                     }
                 }
             }
-
         }
         stage('Run Api Tests') {
             steps {
                 script {
                     def dockerContainer = dockerImage.run('-p 5000:5000 -d')
-                    dockerContainer.inside("-u root") {
+                    dockerContainer.inside {
                         sh 'python3 -m pytest /app/tests/api_tests.py'
                     }
                     dockerContainer.stop()
