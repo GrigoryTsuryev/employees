@@ -46,7 +46,6 @@ pipeline {
                     } finally  {
                         dockerContainer.stop()
                     }
-
                 }
             }
         }
