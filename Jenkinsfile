@@ -14,7 +14,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('tzvitsuryev/employees-app:15')
+                    dockerImage = docker.build('tzvitsuryev/employees-app:latest')
                 }
             }
 
@@ -34,11 +34,14 @@ pipeline {
         stage('Run Api Tests') {
             steps {
                 script {
-            
-                    def dockerContainer = dockerImage.run()
-                    sh "docker exec ${dockerContainer.id} python3 -m pytest /app/tests/api_tests.py"
-                    dockerContainer.stop()
-                    dockerContainer.remove()
+                    try {
+                        def dockerContainer = dockerImage.run()
+                        sh "docker exec ${dockerContainer.id} python3 -m pytest /app/tests/api_tests.py"
+                    } finally  {
+                        dockerContainer.stop()
+                        dockerContainer.remove()
+                    }
+
                 }
             }
         }
