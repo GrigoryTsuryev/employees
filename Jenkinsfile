@@ -32,11 +32,8 @@ pipeline {
         stage('Run Api Tests') {
             steps {
                 script {
-                    docker.image(dockerImage).withRun('-p 5000:5000') { c ->
-                       
-                        sh "python3 -m pytest /app/tests/api_tests.py"
-                        
-                        
+                    dockerImage.withRun('-p 5000:5000') { c ->
+                       sh "python3 -m pytest /app/tests/api_tests.py"                     
                     }
                 }
             }
