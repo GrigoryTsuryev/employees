@@ -53,7 +53,7 @@ pipeline {
         stage('Push Image to Docker Hub') {
              when {
                 expression {
-                    return env.BRANCH_NAME  = 'master'
+                    return env.BRANCH_NAME == 'master'
                 }
             }
             steps {
