@@ -17,6 +17,7 @@ pipeline {
                     dockerImage = docker.build('tzvitsuryev/employees-app:latest')
                 }
             }
+            
         }
 
         stage('Run unittest') {
