@@ -11,26 +11,21 @@ pipeline {
                 }
             }
         }
-          stage('Build Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t tzvitsuryev/employees-app:13 .'
+                    dockerImage = docker.build('tzvitsuryev/employees-app:${buildNumber}')
                 }
             }
+
         }
 
-        // stage('Run unittest') {
-        //     steps {
-        //         script {
-        //             sh 'docker run tzvitsuryev/employees-app:13 python -m unittest discover -s tests'
-        //         }
-        //     }
-        // }
-
-        stage('Run Api Tests') {
+        stage('Run unittest') {
             steps {
                 script {
-                    sh 'docker run tzvitsuryev/employees-app:13 python3 -m pytest /app/tests/api_tests.py'
+                    dockerImage.inside {
+                        sh 'python -m unittest discover -s tests'
+                    }
                 }
             }
         }
@@ -39,7 +34,32 @@ pipeline {
         stage('Run Api Tests') {
             steps {
                 script {
-                    dockerImage.inside { sh 'python3 -m pytest /app/tests/api_tests.py' }
+            
+                    def dockerContainer = dockerImage.run()
+
+                    def ready = false
+                    def maxAttempts = 30 // Change the number of attempts as needed
+                    def currentAttempt = 0
+                    while (!ready && currentAttempt < maxAttempts) {
+                        def containerStatus = sh(script: "docker inspect -f '{{.State.Running}}' ${dockerContainer.id}", returnStdout: true).trim()
+                        if (containerStatus == "true") {
+                            ready = true
+                        } else {
+                            currentAttempt++
+                            sleep(time: 10, unit: 'SECONDS') // Wait for 10 seconds before rechecking
+                        }
+                    }
+
+                    // Run tests inside the container
+                    if (ready) {
+                        sh "docker exec ${dockerContainer.id} python3 -m pytest /app/tests/api_tests.py"
+                    } else {
+                        error "Container didn't start in time"
+                    }
+
+                    // Clean up: stop and remove the container
+                    dockerContainer.stop()
+                    dockerContainer.remove(force: true)
                 }
             }
         }
