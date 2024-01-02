@@ -11,21 +11,26 @@ pipeline {
                 }
             }
         }
-        stage('Build Docker Image') {
+          stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('tzvitsuryev/employees-app:13')
+                    sh 'docker build -t tzvitsuryev/employees-app:13 .'
                 }
             }
-
         }
 
-        stage('Run unittest') {
+        // stage('Run unittest') {
+        //     steps {
+        //         script {
+        //             sh 'docker run tzvitsuryev/employees-app:13 python -m unittest discover -s tests'
+        //         }
+        //     }
+        // }
+
+        stage('Run Api Tests') {
             steps {
                 script {
-                    dockerImage.inside {
-                        sh 'python -m unittest discover -s tests'
-                    }
+                    sh 'docker run tzvitsuryev/employees-app:13 python3 -m pytest /app/tests/api_tests.py'
                 }
             }
         }
