@@ -7,7 +7,7 @@ pipeline {
             steps {
                 script {
                     def branchName = env.BRANCH_NAME
-                    git branch: branchName, url: 'https://github.com/GrigoryTsuryev/employees.git'
+                    git branch: branchName, credentialsId: 'github', url: 'https://github.com/GrigoryTsuryev/employees.git'
                 }
             }
         }
@@ -17,7 +17,7 @@ pipeline {
                     dockerImage = docker.build('tzvitsuryev/employees-app:latest')
                 }
             }
-            
+
         }
 
         stage('Run unittest') {
