@@ -1,6 +1,9 @@
 def dockerImage;
 pipeline {
     agent any
+    triggers{
+        githubPush()
+    }
 
     stages {
         stage('checkout') {
