@@ -14,6 +14,7 @@ def get_base_url():
 @pytest.fixture
 def base_url():
     return get_base_url()
+    
 
 # Test using unittest.TestCase
 class TestAPI(unittest.TestCase):
