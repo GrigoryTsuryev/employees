@@ -1,7 +1,8 @@
 def dockerImage;
 pipeline {
     agent any
-    triggers{
+
+    triggers {
         githubPush()
     }
 
