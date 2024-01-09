@@ -22,7 +22,12 @@ pipeline {
                     dockerImage = docker.build('tzvitsuryev/employees-app:edge')
                 }
             }
+        }
 
+        stage('Terraform init') {
+            steps {
+                sh 'terraform init'
+            }
         }
 
         stage('Run unittest') {
