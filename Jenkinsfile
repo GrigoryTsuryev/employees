@@ -5,7 +5,7 @@ pipeline {
     triggers {
         githubPush()
     }
-
+  stages {
         stage('checkout') {
             steps {
                 script {
@@ -14,7 +14,7 @@ pipeline {
                 }
             }
         }
-    stages {
+  
         stage('Terraform Init') {
             steps {
                 sh 'terraform init'
