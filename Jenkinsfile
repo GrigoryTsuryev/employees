@@ -6,7 +6,14 @@ pipeline {
         githubPush()
     }
 
-
+        stage('checkout') {
+            steps {
+                script {
+                    def branchName = env.BRANCH_NAME
+                    git branch: branchName, credentialsId: 'github', url: 'https://github.com/GrigoryTsuryev/employees.git'
+                }
+            }
+        }
     stages {
         stage('Terraform Init') {
             steps {
@@ -31,14 +38,7 @@ pipeline {
     }
 
 
-        // stage('checkout') {
-        //     steps {
-        //         script {
-        //             def branchName = env.BRANCH_NAME
-        //             git branch: branchName, credentialsId: 'github', url: 'https://github.com/GrigoryTsuryev/employees.git'
-        //         }
-        //     }
-        // }
+
         // stage('Build Docker Image') {
         //     steps {
         //         script {
