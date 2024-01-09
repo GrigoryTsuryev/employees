@@ -8,11 +8,27 @@ pipeline {
 
 
     stages {
-        stage('Terraform init') {
+        stage('Terraform Init') {
             steps {
                 sh 'terraform init'
             }
         }
+        stage('Terraform Plan') {
+            steps {
+                sh 'terraform plan -out=tfplan'
+            }
+        }
+        stage('Terraform Apply') {
+            steps {
+                sh 'terraform apply tfplan'
+            }
+        }
+        stage('Terraform destroy') {
+            steps {
+                sh 'terraform destroy tfplan'
+            }
+        }
+    }
 
 
         // stage('checkout') {
@@ -79,29 +95,7 @@ pipeline {
         // }
 
 
-    stages {
-        stage('Terraform Init') {
-            steps {
-                sh 'terraform init'
-            }
-        }
-        stage('Terraform Plan') {
-            steps {
-                sh 'terraform plan -out=tfplan'
-            }
-        }
-        stage('Terraform Apply') {
-            steps {
-                sh 'terraform apply tfplan'
-            }
-        }
-        stage('Terraform destroy') {
-            steps {
-                sh 'terraform destroy tfplan'
-            }
-        }
-    }
-
-    }
+    
+    
 
 }
