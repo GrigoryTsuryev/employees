@@ -10,7 +10,7 @@ pipeline {
             steps {
                 script {
                     def branchName = env.BRANCH_NAME
-                    git branch: branchName, credentialsId: 'ec2-jenkins', url: 'https://github.com/GrigoryTsuryev/employees.git'
+                    git branch: branchName, credentialsId: 'jenkins-webhook', url: 'https://github.com/GrigoryTsuryev/employees.git'
                 }
             }
         }
