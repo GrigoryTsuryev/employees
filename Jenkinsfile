@@ -24,7 +24,6 @@ pipeline {
             }
         }
  
-
         stage('Run unittest') {
             steps {
                 script {
