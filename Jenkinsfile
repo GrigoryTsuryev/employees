@@ -16,12 +16,10 @@ pipeline {
         }
     
 
-
-
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('tzvitsuryev/employees-app:edge')
+                    dockerImage = docker.build('tzvitsuryev/employees:alpine')
                 }
             }
         }
