@@ -10,7 +10,7 @@ pipeline {
             steps {
                 script {
                     def branchName = env.BRANCH_NAME
-                    git branch: branchName, credentialsId: 'github', url: 'https://github.com/GrigoryTsuryev/employees.git'
+                    git branch: branchName, credentialsId: 'ec2-jenkins', url: 'https://github.com/GrigoryTsuryev/employees.git'
                 }
             }
         }
@@ -22,17 +22,17 @@ pipeline {
         }
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan -out=tfplan'
+                sh 'terraform plan'
             }
         }
         stage('Terraform Apply') {
             steps {
-                sh 'terraform apply tfplan'
+                sh 'terraform apply'
             }
         }
         stage('Terraform destroy') {
             steps {
-                sh 'terraform destroy tfplan'
+                sh 'terraform destroy'
             }
         }
     }
