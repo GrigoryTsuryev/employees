@@ -28,7 +28,12 @@ pipeline {
         stage('deploy to eks') {
             steps {
                 script {
-                    "aws resourcegroupstaggingapi get-resources --region us-west-2 "
+                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                        // Your AWS CLI or SDK commands go here
+                        sh 'aws s3 ls'
+                        sh 'aws ec2 describe-instances'
+                        // Add more AWS commands as needed
+                    }
                 }
             }
         }
