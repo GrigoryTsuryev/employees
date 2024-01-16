@@ -30,10 +30,7 @@ pipeline {
         stage('deploy to eks') {
             steps {
                 script {
-                    "echo $AWS_CREDENTIALS"
-                    //  withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                    //     sh 'aws eks update-kubeconfig --region us-west-2 --name eks-cluster'
-                    // }
+                    sh 'aws eks update-kubeconfig --region us-west-2 --name eks-cluster'
                 }
             }
         }
