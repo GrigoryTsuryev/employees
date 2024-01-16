@@ -78,11 +78,11 @@ pipeline {
 
         
         stage('deploy to eks') {
-            when {
-                expression {
-                    return env.BRANCH_NAME == 'master'
-                }
-            }
+            // when {
+            //     expression {
+            //         return env.BRANCH_NAME == 'master'
+            //     }
+            // }
             steps {
                 script {
                     sh 'aws eks update-kubeconfig --region us-west-2 --name eks-cluster'
