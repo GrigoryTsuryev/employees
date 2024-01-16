@@ -31,7 +31,10 @@ pipeline {
             steps {
                 script {
                     sh 'aws eks update-kubeconfig --region us-west-2 --name eks-cluster'
-                    sh 'kubectl get pods'
+                    dir('kubernetes') {
+                        // Execute kubectl command to apply the YAML files
+                        sh 'kubectl apply -f employees.yaml'
+                    }
                 }
             }
         }
