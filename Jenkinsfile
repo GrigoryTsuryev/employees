@@ -21,24 +21,6 @@ pipeline {
             }
         }
 
-
-
-
-
-
-
-        stage('deploy to eks') {
-            steps {
-                script {
-                    sh 'aws eks update-kubeconfig --region us-west-2 --name eks-cluster'
-                    dir('kubernetes') {
-                        // Execute kubectl command to apply the YAML files
-                        sh 'kubectl apply -f employees.yaml'
-                    }
-                }
-            }
-        }
-
         // stage('Build Docker Image') {
         //     steps {
         //         script {
@@ -87,18 +69,28 @@ pipeline {
         //     }
         //     steps {
         //         script {
-        //             // Login to Docker Hub (replace credentials with yours)
         //             withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
         //                 dockerImage.push()
         //             }
-        //             dockerContainer = dockerImage.run()
-
-
         //         }
         //     }
         // }
 
-
-
+        
+        stage('deploy to eks') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'master'
+                }
+            }
+            steps {
+                script {
+                    sh 'aws eks update-kubeconfig --region us-west-2 --name eks-cluster'
+                    dir('kubernetes') {
+                        sh 'kubectl apply -f employees.yaml'
+                    }
+                }
+            }
+        }
   }
 }
