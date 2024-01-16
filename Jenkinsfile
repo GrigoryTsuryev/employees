@@ -31,6 +31,7 @@ pipeline {
             steps {
                 script {
                     sh 'aws eks update-kubeconfig --region us-west-2 --name eks-cluster'
+                    sh 'kubectl get pods'
                 }
             }
         }
