@@ -48,7 +48,7 @@ pipeline {
         stage('Run Api Tests') {
             when {
                 expression {
-                    return env.BRANCH_NAME != 'develop' || env.BRANCH_NAME != 'master'
+                    return env.BRANCH_NAME == 'feature'
                 }
             }
             steps {
