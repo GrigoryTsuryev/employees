@@ -2,28 +2,33 @@ def dockerImage;
 pipeline {
     agent any
 
+    environment {
+        AWS_CREDENTIALS = credentials('aws-credentials')
+        AWS_DEFAULT_REGION    = 'us-west-2'
+    }
+
     triggers {
         githubPush()
     }
 
-    stages {
+  stages {
         stage('checkout') {
             steps {
                 script {
                     def branchName = env.BRANCH_NAME
-                    git branch: branchName, credentialsId: 'github', url: 'https://github.com/GrigoryTsuryev/employees.git'
+                    git branch: branchName, credentialsId: 'jenkins-webhook', url: 'https://github.com/GrigoryTsuryev/employees.git'
                 }
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('tzvitsuryev/employees-app:edge')
+                    dockerImage = docker.build('tzvitsuryev/employees:alpine')
                 }
             }
-
         }
-
+ 
         stage('Run unittest') {
             steps {
                 script {
@@ -53,6 +58,8 @@ pipeline {
                 }
             }
         }
+
+        
         
         stage('Push Image to Docker Hub') {
              when {
@@ -62,7 +69,6 @@ pipeline {
             }
             steps {
                 script {
-                    // Login to Docker Hub (replace credentials with yours)
                     withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
                         dockerImage.push()
                     }
@@ -70,6 +76,21 @@ pipeline {
             }
         }
 
-    }
-
+        
+        stage('deploy to eks') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'master'
+                }
+            }
+            steps {
+                script {
+                    sh 'aws eks update-kubeconfig --region us-west-2 --name eks-cluster'
+                    dir('kubernetes') {
+                        sh 'kubectl apply -f employees.yaml'
+                    }
+                }
+            }
+        }
+  }
 }
