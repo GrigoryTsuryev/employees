@@ -22,6 +22,11 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            when {
+                expression {
+                    return env.BRANCH_NAME != 'master'
+                }
+            }
             steps {
                 script {
                     dockerImage = docker.build('tzvitsuryev/employees:alpine')
@@ -30,6 +35,11 @@ pipeline {
         }
  
         stage('Run unittest') {
+            when {
+                expression {
+                    return env.BRANCH_NAME != 'master'
+                }
+            }
             steps {
                 script {
                     dockerImage.inside {
@@ -41,9 +51,9 @@ pipeline {
         
         
         stage('Run Api Tests') {
-             when {
+            when {
                 expression {
-                    return env.BRANCH_NAME != 'develop'
+                    return env.BRANCH_NAME != 'develop' || env.BRANCH_NAME != 'master'
                 }
             }
             steps {
@@ -69,7 +79,7 @@ pipeline {
             }
             steps {
                 script {
-                    withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
+                    withDockerRegistry([ credentialsId: "docker-hub", url: "" ]) {
                         dockerImage.push()
                     }
                 }
