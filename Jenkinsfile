@@ -22,11 +22,6 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            when {
-                expression {
-                    return env.BRANCH_NAME != 'master'
-                }
-            }
             steps {
                 script {
                     dockerImage = docker.build('tzvitsuryev/employees:alpine')
