@@ -21,68 +21,68 @@ pipeline {
             }
         }
 
-        // stage('Build Docker Image') {
-        //     steps {
-        //         script {
-        //             dockerImage = docker.build('tzvitsuryev/employees:alpine')
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build('tzvitsuryev/employees:alpine')
+                }
+            }
+        }
  
-        // stage('Run unittest') {
-        //     steps {
-        //         script {
-        //             dockerImage.inside {
-        //                 sh 'python -m unittest discover -s tests'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Run unittest') {
+            steps {
+                script {
+                    dockerImage.inside {
+                        sh 'python -m unittest discover -s tests'
+                    }
+                }
+            }
+        }
         
         
-        // stage('Run Api Tests') {
-        //      when {
-        //         expression {
-        //             return env.BRANCH_NAME != 'develop'
-        //         }
-        //     }
-        //     steps {
-        //         script {
-        //             def dockerContainer;
-        //             try {
-        //                 dockerContainer = dockerImage.run()
-        //                 sh "docker exec ${dockerContainer.id} python3 -m pytest /app/tests/api_tests.py"
-        //             } finally  {
-        //                 dockerContainer.stop()
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Run Api Tests') {
+             when {
+                expression {
+                    return env.BRANCH_NAME != 'develop'
+                }
+            }
+            steps {
+                script {
+                    def dockerContainer;
+                    try {
+                        dockerContainer = dockerImage.run()
+                        sh "docker exec ${dockerContainer.id} python3 -m pytest /app/tests/api_tests.py"
+                    } finally  {
+                        dockerContainer.stop()
+                    }
+                }
+            }
+        }
 
         
         
-        // stage('Push Image to Docker Hub') {
-        //      when {
-        //         expression {
-        //             return env.BRANCH_NAME == 'master'
-        //         }
-        //     }
-        //     steps {
-        //         script {
-        //             withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
-        //                 dockerImage.push()
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Push Image to Docker Hub') {
+             when {
+                expression {
+                    return env.BRANCH_NAME == 'master'
+                }
+            }
+            steps {
+                script {
+                    withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
 
         
         stage('deploy to eks') {
-            // when {
-            //     expression {
-            //         return env.BRANCH_NAME == 'master'
-            //     }
-            // }
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'master'
+                }
+            }
             steps {
                 script {
                     sh 'aws eks update-kubeconfig --region us-west-2 --name eks-cluster'
